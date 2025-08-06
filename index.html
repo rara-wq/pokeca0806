@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポケモンカード検索ツール</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ポケモンカード検索ツール</h1>
+        </header>
+        
+        <div class="search-section">
+            <div class="search-container">
+                <button id="refreshBtn" class="action-btn">データ更新</button>
+                <input type="text" id="searchInput" placeholder="番号を入力してください（例：073）" maxlength="10">
+                <button id="searchBtn">検索</button>
+                <button id="orderBtn" class="action-btn">
+                    納品書を見る
+                    <span id="orderBadge" class="badge hidden">0</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div id="loading" class="loading hidden">検索中...</div>
+            <div id="error" class="error hidden">該当するカードが見つかりませんでした</div>
+            <div id="results" class="results-grid"></div>
+        </div>
+    </div>
+    
+    <!-- 納品書ページ -->
+    <div id="orderPage" class="page hidden">
+        <div class="container">
+            <header>
+                <h1>納品書</h1>
+                <button id="backToSearchBtn" class="action-btn">検索に戻る</button>
+            </header>
+            
+            <div class="order-content">
+                <!-- 手動追加ボタン -->
+                <div class="manual-add-section">
+                    <button id="manualAddBtn" class="manual-add-btn">+ 手動で商品を追加</button>
+                </div>
+                
+                <!-- 手動追加フォーム -->
+                <div id="manualAddForm" class="manual-add-form hidden">
+                    <h3>商品の手動追加</h3>
+                    <div class="form-grid">
+                        <input type="text" id="manualTitle" placeholder="商品タイトル" required>
+                        <input type="text" id="manualNumber" placeholder="商品型番">
+                        <input type="text" id="manualRarity" placeholder="レアリティ">
+                        <input type="number" id="manualPrice" placeholder="価格（円）" min="0" required>
+                        <input type="number" id="manualQuantity" placeholder="数量" min="1" value="1" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button id="addManualItemBtn" class="form-btn add-btn">追加</button>
+                        <button id="cancelManualAddBtn" class="form-btn cancel-btn">キャンセル</button>
+                    </div>
+                </div>
+                
+                <!-- 納品書テーブル -->
+                <div class="order-table-section">
+                    <table id="orderTable" class="order-table">
+                        <thead>
+                            <tr>
+                                <th>商品タイトル</th>
+                                <th>価格</th>
+                                <th>数量</th>
+                                <th>小計</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                        </tbody>
+                    </table>
+                    
+                    <div id="orderEmpty" class="order-empty hidden">
+                        <p>納品書にアイテムが追加されていません</p>
+                    </div>
+                    
+                    <!-- 価格変更案内 -->
+                    <div id="priceEditNotice" class="price-edit-notice hidden">
+                        <p>※価格をクリックすると金額を変更できます</p>
+                    </div>
+                </div>
+                
+                <!-- 合計セクション -->
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">合計数量:</span>
+                        <span id="totalQuantity" class="summary-value">0</span>
+                    </div>
+                    <div class="summary-row total-amount">
+                        <span class="summary-label">合計金額:</span>
+                        <span id="totalAmount" class="summary-value">￥0</span>
+                    </div>
+                </div>
+                
+                <!-- PDF出力・クリアボタン -->
+                <div class="pdf-section">
+                    <button id="exportPdfBtn" class="pdf-btn">PDF出力</button>
+                    <button id="clearOrderBtn" class="clear-btn">クリア</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PDF出力用印刷ページ -->
+    <div id="printPage" class="print-page hidden">
+        <div class="print-container">
+            <header class="print-header">
+                <h1>納品書</h1>
+                <p class="print-date">作成日: <span id="printDate"></span></p>
+            </header>
+            
+            <div class="print-content">
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>商品名</th>
+                            <th>価格</th>
+                            <th>数量</th>
+                            <th>小計</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printTableBody">
+                    </tbody>
+                </table>
+                
+                <div class="print-summary">
+                    <div class="print-total-row">
+                        <span class="print-total-label">合計数量:</span>
+                        <span id="printTotalQuantity" class="print-total-value">0</span>
+                    </div>
+                    <div class="print-total-row print-final-total">
+                        <span class="print-total-label">合計金額:</span>
+                        <span id="printTotalAmount" class="print-total-value">￥0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="print-actions">
+                <button id="backFromPrintBtn" class="back-btn">戻る</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
